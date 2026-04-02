@@ -1,16 +1,15 @@
-# Use Java 17
-FROM eclipse-temurin:17-jdk
-# Set working directory
-WORKDIR /app
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Copy all files
+WORKDIR /app
 COPY . .
 
-# Give permission to mvnw (important)
-RUN chmod +x mvnw
+RUN mvn clean package -DskipTests
 
-# Build the project
-RUN ./mvnw clean package -DskipTests
+# Run stage
+FROM eclipse-temurin:17-jdk
 
-# Run the jar
-CMD ["java", "-jar", "target/whatsapp-bot-0.0.1-SNAPSHOT.jar"]
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+CMD ["java", "-jar", "app.jar"]
