@@ -1,3 +1,6 @@
-target/
-.git
-.gitignore
+**/target
+**/.git
+**/.gitignore
+**/.idea
+**/.vscode
+**/*.iml
